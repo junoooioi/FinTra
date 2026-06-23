@@ -1,0 +1,8 @@
+{
+  "name": "Remix: DOST V Financial Tracking System",
+  "description": "A multi-step government-style document processing workflow that tracks documents through Budget, Accounting, and Cashier sections with audit trails and compliance management.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
