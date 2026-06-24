@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useWorkflow } from '../context/WorkflowContext';
+import { useWorkflow } from '../hooks/useWorkflow';
 import { ShieldCheck, History, Search, Download } from 'lucide-react';
 
 export const AuditTrailLog: React.FC = () => {

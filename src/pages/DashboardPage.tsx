@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useWorkflow } from '../context/WorkflowContext';
+import { useWorkflow } from '../hooks/useWorkflow';
 import { SearchBar } from '../components/SearchBar';
 import { StatusBadge } from '../components/StatusBadge';
 import { 

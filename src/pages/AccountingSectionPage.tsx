@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useWorkflow } from '../context/WorkflowContext';
+import { useWorkflow } from '../hooks/useWorkflow';
 import { RoleBasedAccess } from '../components/RoleBasedAccess';
 import { DocumentStatusTracker } from '../components/DocumentStatusTracker';
 import { ChecklistItem, Document, TaxComputation, JournalEntry } from '../types';

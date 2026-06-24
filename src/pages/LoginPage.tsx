@@ -1,64 +1,11 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useWorkflow, useAuth } from '../context/WorkflowContext';
+import { useWorkflow } from '../hooks/useWorkflow';
+import { useAuth } from '../hooks/useAuth';
 import { User, Role } from '../types';
 import { Mail, UserPlus, Check, Globe, AlertCircle, RefreshCw, Key, ShieldCheck, Twitter, Instagram, ArrowRight, Phone, Facebook } from 'lucide-react';
-
-// Pure mathematical SVG representation of the official DOST Logo (exact match to official color scheme)
-export function DostLogo({ className = "w-20 h-20" }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 100 100" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
-      {/* Top Left Circle */}
-      {/* Black top half */}
-      <path d="M 2 26 A 24 24 0 0 1 50 26 L 26 26 Z" fill="#000000" />
-      {/* Blue bottom-left quadrant */}
-      <path d="M 2 26 A 24 24 0 0 0 26 50 L 26 26 Z" fill="#00AEEF" />
-      {/* White bottom-right quadrant */}
-      <path d="M 26 26 L 26 50 A 24 24 0 0 0 50 26 Z" fill="#ffffff" />
-
-      {/* Top Right Circle */}
-      {/* Blue top-left quadrant */}
-      <path d="M 50 26 A 24 24 0 0 1 74 2 L 74 26 Z" fill="#00AEEF" />
-      {/* Black right half */}
-      <path d="M 74 2 A 24 24 0 0 1 98 26 A 24 24 0 0 1 74 50 L 74 26 Z" fill="#000000" />
-      {/* White bottom-left quadrant */}
-      <path d="M 74 26 L 50 26 A 24 24 0 0 0 74 50 Z" fill="#ffffff" />
-
-      {/* Bottom Left Circle */}
-      {/* Black left half */}
-      <path d="M 26 50 A 24 24 0 0 0 2 74 A 24 24 0 0 0 26 98 L 26 74 Z" fill="#000000" />
-      {/* White top-right quadrant */}
-      <path d="M 26 74 L 26 50 A 24 24 0 0 1 50 74 Z" fill="#ffffff" />
-      {/* Blue bottom-right quadrant */}
-      <path d="M 26 74 L 50 74 A 24 24 0 0 1 26 98 Z" fill="#00AEEF" />
-
-      {/* Bottom Right Circle */}
-      {/* White top-left quadrant */}
-      <path d="M 74 74 L 50 74 A 24 24 0 0 1 74 50 Z" fill="#ffffff" />
-      {/* Blue top-right quadrant */}
-      <path d="M 74 74 L 74 50 A 24 24 0 0 1 98 74 Z" fill="#00AEEF" />
-      {/* Black bottom half */}
-      <path d="M 50 74 A 24 24 0 0 0 74 98 A 24 24 0 0 0 98 74 L 74 74 Z" fill="#000000" />
-
-      {/* Center Black Star/Diamond */}
-      <path d="M 26 50 A 24 24 0 0 0 50 26 A 24 24 0 0 0 74 50 A 24 24 0 0 0 50 74 A 24 24 0 0 0 26 50 Z" fill="#000000" />
-    </svg>
-  );
-}
-
-// Beautiful vector SVG logo representing InsideBox
-export function InsideBoxLogo({ className = "w-6 h-6" }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M12 2L2 7l10 5 10-5-10-5z" fill="#3b82f6" fillOpacity="0.4" />
-      <path d="M12 2L2 7l10 5 10-5-10-5z" stroke="#2563eb" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M21.5 7v10l-9.5 5-9.5-5V7" stroke="#2563eb" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M12 12v10" stroke="#2563eb" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M2 7l10 5 10-5" stroke="#2563eb" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M7 9.5l5 2.5 5-2.5" stroke="#60a5fa" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
+import { DostLogo } from '../components/DostLogo';
+import { InsideBoxLogo } from '../components/InsideBoxLogo';
 
 export function LoginPage() {
   const { signInWithGoogle, loading, error: authError } = useAuth();
@@ -68,6 +15,7 @@ export function LoginPage() {
   
   // Clearance passwords mapping for official accounts
   const ACCOUNT_PASSWORDS: Record<string, string> = {
+    'reconjoylyn@gmail.com': 'admin123',
     'loislainalcantara@gmail.com': 'admin123',
     'maria.santos@region5.dost.gov.ph': 'budget123',
     'cesar.aguinaldo@region5.dost.gov.ph': 'accountant123',
@@ -135,43 +83,28 @@ export function LoginPage() {
   const [customPassword, setCustomPassword] = useState('');
   const [isCreatingCustom, setIsCreatingCustom] = useState(false);
 
-  // Pre-configured official DOST V accounts
+  // Pre-configured official DOST V accounts available on the user's device
   const googleAccounts = [
     {
-      name: 'Lois Lain Alcantara',
-      email: 'loislainalcantara@gmail.com',
+      name: 'Joylyn Recon',
+      email: 'reconjoylyn@gmail.com',
       role: 'Administrator' as Role,
       badge: 'All Clearance Access',
-      avatar: 'LA'
-    },
-    {
-      name: 'Maria Santos',
-      email: 'maria.santos@region5.dost.gov.ph',
-      role: 'Budget Officer' as Role,
-      badge: 'Budget & Allotment Unit',
-      avatar: 'MS'
-    },
-    {
-      name: 'Cesar Aguinaldo',
-      email: 'cesar.aguinaldo@region5.dost.gov.ph',
-      role: 'Chief Accountant' as Role,
-      badge: 'Accounting & Tax Unit',
-      avatar: 'CA'
-    },
-    {
-      name: 'Regina Clave',
-      email: 'regina.clave@region5.dost.gov.ph',
-      role: 'Disbursing Cashier' as Role,
-      badge: 'Cashier & Fiscal Unit',
-      avatar: 'RC'
+      avatar: 'JR'
     }
   ];
 
-  const handleSelectAccountClick = (acc: typeof googleAccounts[0]) => {
-    // Initiate secure password verification phase
-    setPasswordVerificationAccount(acc);
-    setPasswordInput('');
-    setPasswordError(null);
+  const handleSelectAccountClick = async (acc: typeof googleAccounts[0]) => {
+    setLoadingAccount(acc.email);
+    try {
+      await signInWithGoogle(acc.name, acc.email, acc.role);
+      sessionStorage.setItem('dost_session_signed_pass', ACCOUNT_PASSWORDS[acc.email.toLowerCase()] || 'admin123');
+      setShowAccounts(false);
+    } catch (err: any) {
+      setErrorMessage(err.message || "Failed to authenticate with Google.");
+    } finally {
+      setLoadingAccount(null);
+    }
   };
 
   const handlePasswordSubmit = async (e: React.FormEvent) => {
@@ -385,33 +318,33 @@ export function LoginPage() {
       <div className="flex-1 flex flex-col md:flex-row bg-slate-100">
         
         {/* Left Panel: DOST Regional Branding (OneDOST4U theme) */}
-        <div className="flex md:w-1/2 text-white pt-10 pb-[36px] md:pb-6 px-6 sm:px-10 md:pl-10 md:pr-[75px] lg:pr-[135px] xl:pr-[165px] flex-col justify-between relative overflow-hidden select-none bg-[#025191]">
+        <div className="flex w-full md:w-[45%] lg:w-[50%] xl:w-[52%] text-white pt-10 pb-[36px] md:pb-6 px-6 sm:px-10 md:pl-6 md:pr-4 lg:pl-10 lg:pr-[80px] xl:pr-[120px] flex-col justify-between relative overflow-hidden select-none bg-gradient-to-b from-[#013c6e] via-[#025191] to-[#014073]">
           {/* Subtle dark pattern overlay for premium texture depth */}
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.06)_0%,transparent_60%)] z-0 pointer-events-none" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.08)_0%,transparent_70%)] z-0 pointer-events-none" />
 
           {/* Top Left minimal header details (Target of CSS Selector for exact upper-left alignment) */}
           <div 
-            style={{ paddingTop: '3px', paddingLeft: '0px', paddingRight: '0px', paddingBottom: '2px', width: '265px' }}
+            style={{ paddingTop: '3px', paddingLeft: '0px', paddingRight: '0px', paddingBottom: '2px', maxWidth: 'none' }}
             className="relative z-10 flex items-center gap-2 self-start w-full max-w-full"
           >
             <div className="p-2 bg-white/10 rounded-xl backdrop-blur-md border border-white/20 shadow-lg shrink-0">
               <DostLogo className="w-10 h-10" />
             </div>
-            <div className="flex flex-col text-left font-sans gap-0.5 text-xs xl:text-sm justify-center">
+            <div className="flex flex-col text-left font-sans gap-0.5 text-[9.5px] min-[375px]:text-[11px] sm:text-xs xl:text-sm justify-center">
               <span 
-                style={{ textAlign: 'left', lineHeight: '15px', paddingLeft: '1px', width: '1978px' }}
+                style={{ textAlign: 'left', lineHeight: '15px', paddingLeft: '1px', whiteSpace: 'nowrap' }}
                 className="font-normal text-white"
               >
                 Department of Science and Technology
               </span>
               <span 
-                style={{ textAlign: 'left', lineHeight: '15px' }}
+                style={{ textAlign: 'left', lineHeight: '15px', whiteSpace: 'nowrap' }}
                 className="font-normal text-white"
               >
                 DOST Region V
               </span>
               <span 
-                style={{ textAlign: 'left', lineHeight: '15px', fontWeight: 'normal', fontFamily: 'Poppins' }}
+                style={{ textAlign: 'left', lineHeight: '15px', fontWeight: 'normal', fontFamily: 'Poppins', whiteSpace: 'nowrap' }}
                 className="font-normal text-white/90"
               >
                 Finance and Administrative Services
@@ -422,104 +355,86 @@ export function LoginPage() {
           {/* Center brand exhibit - flush left, font sizes customized as requested */}
           <div className="relative z-10 my-8 md:my-auto text-left w-full max-w-full">
             <h1 
-              style={{ fontSize: '42px' }}
+              style={{ fontSize: 'clamp(32px, 5.5vw, 70px)' }}
               className="font-bold font-sans tracking-tight leading-none text-white select-none drop-shadow-md"
             >
               OneDOST4U:
             </h1>
             <p 
-              style={{ paddingLeft: '1px', paddingRight: '3px', marginLeft: '0px', marginTop: '0px' }}
-              className="text-base sm:text-lg md:text-sm lg:text-lg xl:text-xl font-light font-sans tracking-tight text-white/90 leading-normal drop-shadow-xs whitespace-normal xl:whitespace-nowrap animate-fade-in"
+              style={{ paddingLeft: '1px', paddingRight: '3px', marginLeft: '0px', marginTop: '0px', fontSize: 'clamp(14px, 1.8vw, 22px)' }}
+              className="font-light font-sans tracking-tight text-white/90 leading-normal drop-shadow-xs whitespace-normal xl:whitespace-nowrap animate-fade-in"
             >
               Solutions and Opportunities for All
             </p>
           </div>
 
           {/* Bottom Panel handles: Website, Phone, Email, Facebook beautifully organized and staying safely inside solid blue */}
-          <div className="relative z-10 pt-4 border-t border-white/10 w-full text-white/80 max-w-full md:max-w-md lg:max-w-lg xl:max-w-xl hidden md:block animate-fade-in">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2 gap-x-4 gap-y-3 text-[11px] lg:text-[12px] xl:text-[12.5px] font-semibold">
-              <a href="https://region5.dost.gov.ph" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:text-white transition cursor-pointer">
-                <Globe className="w-4 h-4 shrink-0 text-sky-300" />
+          <div className="relative z-10 pt-4 border-t border-white/10 w-full text-white/80 max-w-full hidden md:block animate-fade-in">
+            <div className="grid grid-cols-2 gap-y-2.5 gap-x-4 lg:flex lg:flex-row lg:flex-nowrap lg:items-center lg:justify-between lg:gap-x-2 text-[10px] md:text-[9.5px] lg:text-[10px] xl:text-[11px] font-normal overflow-hidden">
+              <a href="https://region5.dost.gov.ph" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 hover:text-white transition cursor-pointer shrink-0">
+                <Globe className="w-3.5 h-3.5 lg:w-3 lg:h-3 shrink-0 text-sky-300" />
                 <span className="font-sans truncate">region5.dost.gov.ph</span>
               </a>
-              <div className="flex items-center gap-2 hover:text-white transition cursor-pointer">
-                <Phone className="w-4 h-4 shrink-0 text-sky-300" />
+              <div className="flex items-center gap-1.5 hover:text-white transition shrink-0">
+                <Phone className="w-3.5 h-3.5 lg:w-3 lg:h-3 shrink-0 text-sky-300" />
                 <span className="font-sans truncate">09671152307</span>
               </div>
-              <a href="mailto:albay@ro5.dost.gov.ph" className="flex items-center gap-2 hover:text-white transition cursor-pointer">
-                <Mail className="w-4 h-4 shrink-0 text-sky-300" />
+              <a href="mailto:albay@ro5.dost.gov.ph" className="flex items-center gap-1.5 hover:text-white transition cursor-pointer shrink-0">
+                <Mail className="w-3.5 h-3.5 lg:w-3 lg:h-3 shrink-0 text-sky-300" />
                 <span className="font-sans truncate" title="albay@ro5.dost.gov.ph">albay@ro5.dost.gov.ph</span>
               </a>
-              <div className="flex items-center gap-2 hover:text-white transition cursor-pointer">
-                <Facebook className="w-4 h-4 shrink-0 text-sky-300" />
+              <a href="https://www.facebook.com/dost5albay/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 hover:text-white transition cursor-pointer shrink-0">
+                <Facebook className="w-3.5 h-3.5 lg:w-3 lg:h-3 shrink-0 text-sky-300" />
                 <span className="font-sans truncate">DOST-Albay</span>
-              </div>
+              </a>
             </div>
           </div>
-
-          {/* Precise wave divider cutting the left backdrop dynamically - overlaps with the right white container */}
-          <svg 
-            className="absolute top-0 right-0 h-full w-[65px] lg:w-[120px] xl:w-[145px] translate-x-[1px] pointer-events-none z-10 text-[#f8fafc] fill-current hidden md:block"
-            viewBox="0 0 250 1000" 
-            preserveAspectRatio="none"
-          >
-            <path d="M170,0 C100,140 10,260 90,420 C170,580 240,680 140,840 C70,950 130,975 250,1000 L250,0 Z" />
-          </svg>
-
-          {/* Horizontal curvy divider for mobile stacked layout */}
-          <svg 
-            className="absolute bottom-0 left-0 w-full h-[24px] translate-y-[1px] pointer-events-none z-10 text-[#f8fafc] fill-current md:hidden"
-            viewBox="0 0 1000 100" 
-            preserveAspectRatio="none"
-          >
-            <path d="M0,100 L0,30 C300,60 700,10 1000,100 Z" />
-          </svg>
         </div>
 
         {/* Right Panel: Interactive Google OAuth Entry Portal */}
-        <div className="flex-1 flex flex-col justify-between items-center p-6 sm:p-10 md:p-8 lg:p-16 bg-[#f8fafc]">
+        <div className="flex-1 flex flex-col justify-between items-center p-6 sm:p-10 md:p-6 lg:p-12 xl:p-16 bg-[#f8fafc]">
           
           {/* Centering space helper for desktop size */}
           <div className="hidden md:block flex-1" />
 
           {/* Main Card */}
-          <div className="w-full max-w-md bg-white rounded-2xl border border-slate-100 shadow-xl shadow-slate-200/50 p-8 sm:p-10 font-sans relative my-auto">
+          <div className="w-full max-w-[340px] bg-white rounded-2xl border border-slate-100 shadow-xl shadow-slate-200/50 p-5 sm:p-6 md:p-5 lg:p-6 font-sans relative my-auto">
             
             <div>
-              <h2 className="text-[20px] font-semibold text-slate-800 tracking-tight mt-1 mb-6 font-sans uppercase">
-                WELCOME!
+              <h2 className="text-[18px] font-semibold text-slate-800 tracking-tight mt-0.5 mb-4 font-sans">
+                Welcome to FinTra!
               </h2>
             </div>
 
             {/* Error Message Display */}
             {errorMessage && (
-              <div className="mb-5 p-3.5 bg-rose-50/60 border border-rose-100 rounded-xl text-xs text-rose-700 flex items-start gap-2.5 animate-shake font-sans">
+              <div className="mb-4 p-3 bg-rose-50/60 border border-rose-100 rounded-xl text-xs text-rose-700 flex items-start gap-2 animate-shake font-sans">
                 <AlertCircle className="w-4 h-4 shrink-0 text-rose-500 mt-0.5" />
                 <span className="leading-snug font-medium">{errorMessage}</span>
               </div>
             )}
 
             {/* Credentials Login Form */}
-            <form onSubmit={handleDirectLoginSubmit} className="space-y-4">
+            <form onSubmit={handleDirectLoginSubmit} className="space-y-3.5">
               
               {/* Email Address Input */}
-              <div className="space-y-1.5 text-left">
-                <label className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider font-sans block">
+              <div className="space-y-1 text-left">
+                <label className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider font-sans block">
                   Email Address
                 </label>
                 <input
                   required
                   type="email"
                   placeholder="Enter your email"
-                  className="w-full h-11 px-4 border border-slate-200 rounded-xl text-sm bg-white focus:outline-none focus:ring-4 focus:ring-blue-600/5 focus:border-blue-500 placeholder-slate-400 text-slate-800 transition duration-150 font-sans shadow-2xs"
+                  className="w-full h-10 px-3.5 border border-slate-200 rounded-xl text-xs sm:text-sm bg-white focus:outline-none focus:ring-4 focus:ring-blue-600/5 focus:border-blue-500 placeholder-slate-400 text-slate-800 transition duration-150 font-sans shadow-2xs"
                   value={directEmail}
                   onChange={(e) => setDirectEmail(e.target.value)}
                 />
               </div>
 
               {/* Password Input */}
-              <div className="space-y-1.5 text-left">
-                <label className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider font-sans block">
+              <div className="space-y-1 text-left">
+                <label className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider font-sans block">
                   Password
                 </label>
                 <div className="relative">
@@ -527,14 +442,14 @@ export function LoginPage() {
                     required
                     type={showPasswordMask ? "text" : "password"}
                     placeholder="Enter your password"
-                    className="w-full h-11 pl-4 pr-12 border border-slate-200 rounded-xl text-sm bg-white focus:outline-none focus:ring-4 focus:ring-blue-600/5 focus:border-blue-500 placeholder-slate-400 text-slate-800 transition duration-150 font-sans shadow-2xs"
+                    className="w-full h-10 pl-3.5 pr-11 border border-slate-200 rounded-xl text-xs sm:text-sm bg-white focus:outline-none focus:ring-4 focus:ring-blue-600/5 focus:border-blue-500 placeholder-slate-400 text-slate-800 transition duration-150 font-sans shadow-2xs"
                     value={directPassword}
                     onChange={(e) => setDirectPassword(e.target.value)}
                   />
                   <button
                     type="button"
                     onClick={() => setShowPasswordMask(!showPasswordMask)}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-semibold text-slate-400 hover:text-slate-600 cursor-pointer select-none transition"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-slate-400 hover:text-slate-600 cursor-pointer select-none transition"
                   >
                     {showPasswordMask ? "Hide" : "Show"}
                   </button>
@@ -542,15 +457,15 @@ export function LoginPage() {
               </div>
 
               {/* Checkbox "Remember for 30 days" & Link "Forgot password" */}
-              <div className="flex items-center justify-between text-[11px] sm:text-xs font-sans text-slate-500 pt-1">
-                <label className="flex items-center gap-2 cursor-pointer select-none hover:text-slate-700 transition">
+              <div className="flex items-center justify-between text-[10px] sm:text-xs font-sans text-slate-500 pt-0.5">
+                <label className="flex items-center gap-1.5 cursor-pointer select-none hover:text-slate-700 transition">
                   <input
                     type="checkbox"
                     checked={rememberMe}
                     onChange={(e) => setRememberMe(e.target.checked)}
-                    className="rounded-md border-slate-300 text-blue-600 focus:ring-blue-500/20 h-4 w-4 cursor-pointer"
+                    className="rounded border-slate-300 text-blue-600 focus:ring-blue-500/20 h-3.5 w-3.5 cursor-pointer"
                   />
-                  <span>Remember for 30 days</span>
+                  <span>Remember</span>
                 </label>
                 <Link
                   to="/forgot-password"
@@ -564,18 +479,18 @@ export function LoginPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full h-11 bg-[#025191] hover:bg-[#025191]/90 text-white font-semibold rounded-xl text-sm transition duration-150 cursor-pointer flex items-center justify-center shadow-md shadow-[#025191]/10 font-sans select-none"
+                className="w-full h-10 bg-[#025191] hover:bg-[#025191]/90 text-white font-semibold rounded-xl text-xs sm:text-sm transition duration-150 cursor-pointer flex items-center justify-center shadow-md shadow-[#025191]/10 font-sans select-none"
               >
                 {loading ? "Authenticating..." : "Sign in"}
               </button>
             </form>
 
             {/* Google Authentication alternate login button */}
-            <div className="relative my-6 select-none font-sans flex items-center justify-center">
+            <div className="relative my-4 select-none font-sans flex items-center justify-center">
               <div className="absolute inset-0 flex items-center">
                 <div className="w-full border-t border-slate-100"></div>
               </div>
-              <span className="relative px-3 bg-white text-slate-400 text-[11px] uppercase tracking-wider font-semibold">Or continue with</span>
+              <span className="relative px-2.5 bg-white text-slate-400 text-[10px] uppercase tracking-wider font-semibold">Or continue with</span>
             </div>
 
             <button
@@ -584,10 +499,10 @@ export function LoginPage() {
                 setErrorMessage(null);
                 setShowAccounts(true);
               }}
-              className="w-full h-11 flex items-center justify-center gap-2.5 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 font-semibold px-4 rounded-xl transition duration-150 text-sm select-none cursor-pointer font-sans shadow-2xs"
+              className="w-full h-10 flex items-center justify-center gap-2 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 font-semibold px-4 rounded-xl transition duration-150 text-xs sm:text-sm select-none cursor-pointer font-sans shadow-2xs"
             >
               {/* Google Icon logo */}
-              <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
+              <svg className="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24">
                 <path
                   fill="#4285F4"
                   d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -609,7 +524,7 @@ export function LoginPage() {
             </button>
 
             {/* Footer switcher to register another admin / employee */}
-            <div className="mt-8 text-center text-xs text-slate-500 font-sans select-none">
+            <div className="mt-5 text-center text-xs text-slate-500 font-sans select-none">
               <span>Don't have an account? </span>
               <button
                 onClick={() => {
@@ -630,26 +545,28 @@ export function LoginPage() {
           <div className="hidden md:block flex-1" />
 
           {/* Social Platforms for Mobile (Phone) Size */}
-          <div className="w-full max-w-sm mt-7 pt-5 border-t border-slate-200/60 pb-1 md:hidden text-center">
+          <div className="w-full max-w-md mt-7 pt-5 border-t border-slate-200/60 pb-1 md:hidden text-center">
             <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-2.5 font-sans">
               Contact & Support Details
             </p>
-            <div className="grid grid-cols-2 gap-x-3.5 gap-y-2.5 text-[10px] sm:text-[11px] font-semibold text-slate-500 justify-center justify-items-center mx-auto w-full max-w-xs px-2">
-              <a href="https://region5.dost.gov.ph" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 hover:text-[#025191] transition cursor-pointer min-w-0 justify-center">
-                <Globe className="w-3.5 h-3.5 shrink-0 text-[#025191]" />
-                <span className="font-sans truncate">region5.dost.gov.ph</span>
-              </a>
-              <div className="flex items-center gap-1.5 hover:text-[#025191] transition min-w-0 justify-center">
-                <Phone className="w-3.5 h-3.5 shrink-0 text-[#025191]" />
-                <span className="font-sans truncate">09671152307</span>
-              </div>
-              <a href="mailto:albay@ro5.dost.gov.ph" className="flex items-center gap-1.5 hover:text-[#025191] transition cursor-pointer animate-fade-in min-w-0 justify-center">
-                <Mail className="w-3.5 h-3.5 shrink-0 text-[#025191]" />
-                <span className="font-sans truncate" title="albay@ro5.dost.gov.ph">albay@ro5.dost.gov.ph</span>
-              </a>
-              <div className="flex items-center gap-1.5 hover:text-[#025191] transition min-w-0 justify-center">
-                <Facebook className="w-3.5 h-3.5 shrink-0 text-[#025191]" />
-                <span className="font-sans truncate">DOST-Albay</span>
+            <div className="flex justify-center">
+              <div className="grid grid-cols-[145px_115px] gap-x-4 gap-y-3 text-left text-[10px] sm:text-[11px] font-semibold text-slate-500 mx-auto">
+                <a href="https://region5.dost.gov.ph" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:text-[#025191] transition cursor-pointer min-w-0">
+                  <Globe className="w-4 h-4 shrink-0 text-[#025191]" />
+                  <span className="font-sans truncate">region5.dost.gov.ph</span>
+                </a>
+                <div className="flex items-center gap-2 hover:text-[#025191] transition min-w-0">
+                  <Phone className="w-4 h-4 shrink-0 text-[#025191]" />
+                  <span className="font-sans truncate">09671152307</span>
+                </div>
+                <a href="mailto:albay@ro5.dost.gov.ph" className="flex items-center gap-2 hover:text-[#025191] transition cursor-pointer min-w-0">
+                  <Mail className="w-4 h-4 shrink-0 text-[#025191]" />
+                  <span className="font-sans truncate" title="albay@ro5.dost.gov.ph">albay@ro5.dost.gov.ph</span>
+                </a>
+                <a href="https://www.facebook.com/dost5albay/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:text-[#025191] transition cursor-pointer min-w-0">
+                  <Facebook className="w-4 h-4 shrink-0 text-[#025191]" />
+                  <span className="font-sans truncate">DOST-Albay</span>
+                </a>
               </div>
             </div>
           </div>

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Mail, AlertCircle, CheckCircle2, ArrowLeft, RefreshCw } from 'lucide-react';
-import { DostLogo } from './LoginPage';
+import { DostLogo } from '../components/DostLogo';
 
 export function ForgotPasswordPage() {
   const navigate = useNavigate();

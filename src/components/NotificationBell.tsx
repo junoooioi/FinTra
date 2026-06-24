@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useWorkflow } from '../context/WorkflowContext';
+import { useWorkflow } from '../hooks/useWorkflow';
 import { Bell, Trash2, CheckCircle2, AlertTriangle, Info, Check } from 'lucide-react';
 
 export const NotificationBell: React.FC = () => {

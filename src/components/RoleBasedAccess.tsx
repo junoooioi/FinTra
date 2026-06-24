@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useWorkflow } from '../context/WorkflowContext';
+import { useWorkflow } from '../hooks/useWorkflow';
 import { Role } from '../types';
 import { ShieldAlert, ShieldCheck, Key, Eye, EyeOff, AlertCircle } from 'lucide-react';
 
