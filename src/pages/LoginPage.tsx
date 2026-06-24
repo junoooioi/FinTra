@@ -235,37 +235,36 @@ export function LoginPage() {
     e.preventDefault();
     setErrorMessage(null);
 
-    if (!customEmail.trim() || !customName.trim() || !customPassword.trim()) {
-      setErrorMessage("Please complete all employee credentials and clearance passwords.");
+    const emailClean = customEmail.trim();
+
+    if (!emailClean || !customName.trim() || !customPassword.trim()) {
+      setErrorMessage("Please complete all credentials and passwords.");
       return;
     }
 
     if (customPassword.trim().length < 4) {
-      setErrorMessage("Organizational security policy: password must be at least 4 characters.");
+      setErrorMessage("Security policy: password must be at least 4 characters.");
       return;
     }
 
-    const emailWithDomain = customEmail.includes('@') ? customEmail : `${customEmail.trim()}@region5.dost.gov.ph`;
-
-    // Secure organizational validation
-    if (emailWithDomain.includes('@') && !emailWithDomain.endsWith('.dost.gov.ph') && !emailWithDomain.endsWith('@gmail.com')) {
-      setErrorMessage("Access Restricted (403): Organizational email must be a valid DOST workplace domain.");
+    if (!emailClean.includes('@') || emailClean.length < 5) {
+      setErrorMessage("Please enter a valid email address.");
       return;
     }
     
     setLoadingAccount('custom');
     try {
       // Save password in local storage dictionary for test logins in this workstation
-      saveCustomPassword(emailWithDomain, customPassword.trim());
+      saveCustomPassword(emailClean, customPassword.trim());
 
       // Save detailed accounts array for direct form logins
       try {
         const stored = localStorage.getItem('dost_custom_accounts_detailed');
         const detailedList = stored ? JSON.parse(stored) : [];
-        const existingIdx = detailedList.findIndex((x: any) => x.email.toLowerCase() === emailWithDomain.toLowerCase());
+        const existingIdx = detailedList.findIndex((x: any) => x.email.toLowerCase() === emailClean.toLowerCase());
         const newAccount = {
           name: customName.trim(),
-          email: emailWithDomain,
+          email: emailClean,
           role: customRole,
           password: customPassword.trim()
         };
@@ -279,14 +278,14 @@ export function LoginPage() {
         console.error(errCustom);
       }
       
-      await signInWithGoogle(customName.trim(), emailWithDomain, customRole);
+      await signInWithGoogle(customName.trim(), emailClean, customRole);
       // Save password to session
       sessionStorage.setItem('dost_session_signed_pass', customPassword.trim());
       
       setIsCreatingCustom(false);
       setShowAccounts(false);
     } catch (err: any) {
-      setErrorMessage(err.message || "Failed to authenticate with Google.");
+      setErrorMessage(err.message || "Failed to authenticate.");
     } finally {
       setLoadingAccount(null);
     }
@@ -358,7 +357,7 @@ export function LoginPage() {
               style={{ fontSize: 'clamp(32px, 5.5vw, 70px)' }}
               className="font-bold font-sans tracking-tight leading-none text-white select-none drop-shadow-md"
             >
-              OneDOST4U:
+              FinTra
             </h1>
             <p 
               style={{ paddingLeft: '1px', paddingRight: '3px', marginLeft: '0px', marginTop: '0px', fontSize: 'clamp(14px, 1.8vw, 22px)' }}
@@ -401,7 +400,7 @@ export function LoginPage() {
           <div className="w-full max-w-[340px] bg-white rounded-2xl border border-slate-100 shadow-xl shadow-slate-200/50 p-5 sm:p-6 md:p-5 lg:p-6 font-sans relative my-auto">
             
             <div>
-              <h2 className="text-[18px] font-semibold text-slate-800 tracking-tight mt-0.5 mb-4 font-sans">
+              <h2 style={{ fontSize: '22px' }} className="font-semibold text-slate-800 tracking-tight mt-0.5 mb-4 font-sans">
                 Welcome to FinTra!
               </h2>
             </div>
@@ -426,7 +425,8 @@ export function LoginPage() {
                   required
                   type="email"
                   placeholder="Enter your email"
-                  className="w-full h-10 px-3.5 border border-slate-200 rounded-xl text-xs sm:text-sm bg-white focus:outline-none focus:ring-4 focus:ring-blue-600/5 focus:border-blue-500 placeholder-slate-400 text-slate-800 transition duration-150 font-sans shadow-2xs"
+                  style={{ fontSize: '12px' }}
+                  className="w-full h-10 px-3.5 border border-slate-200 rounded-xl bg-white focus:outline-none focus:ring-4 focus:ring-blue-600/5 focus:border-blue-500 placeholder-slate-400 text-slate-800 transition duration-150 font-sans shadow-2xs"
                   value={directEmail}
                   onChange={(e) => setDirectEmail(e.target.value)}
                 />
@@ -442,7 +442,8 @@ export function LoginPage() {
                     required
                     type={showPasswordMask ? "text" : "password"}
                     placeholder="Enter your password"
-                    className="w-full h-10 pl-3.5 pr-11 border border-slate-200 rounded-xl text-xs sm:text-sm bg-white focus:outline-none focus:ring-4 focus:ring-blue-600/5 focus:border-blue-500 placeholder-slate-400 text-slate-800 transition duration-150 font-sans shadow-2xs"
+                    style={{ fontSize: '12px' }}
+                    className="w-full h-10 pl-3.5 pr-11 border border-slate-200 rounded-xl bg-white focus:outline-none focus:ring-4 focus:ring-blue-600/5 focus:border-blue-500 placeholder-slate-400 text-slate-800 transition duration-150 font-sans shadow-2xs"
                     value={directPassword}
                     onChange={(e) => setDirectPassword(e.target.value)}
                   />
@@ -592,7 +593,7 @@ export function LoginPage() {
               </div>
               <h3 className="text-base font-bold text-slate-800 mt-2 font-sans">Choose an account</h3>
               <p className="text-xs text-slate-500 mt-0.5 font-inter">
-                to continue to <span className="font-semibold text-blue-600">DOST V Finance</span>
+                to continue to <span className="font-semibold text-blue-600">FinTra</span>
               </p>
             </div>
 
@@ -676,20 +677,17 @@ export function LoginPage() {
               /* Custom Account Generator for flexibility */
               <form onSubmit={handleCustomSubmit} className="p-6 space-y-4 font-inter">
                 <div className="space-y-1">
-                  <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest font-sans">Employee Email</label>
+                  <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest font-sans">Email</label>
                   <div className="relative">
                     <Mail className="absolute left-3 top-2.5 w-4 h-4 text-slate-400" />
                     <input
                       required
-                      type="text"
-                      placeholder="e.g. m.santos"
-                      className="w-full pl-9 pr-48 h-9 border border-slate-250 rounded-lg text-xs font-mono focus:ring-1 focus:ring-blue-600 focus:outline-none"
+                      type="email"
+                      placeholder="e.g. name@example.com"
+                      className="w-full pl-9 pr-3 h-9 border border-slate-250 rounded-lg text-xs font-mono focus:ring-1 focus:ring-blue-600 focus:outline-none"
                       value={customEmail}
                       onChange={(e) => setCustomEmail(e.target.value)}
                     />
-                    <span className="absolute right-3 top-2 text-[10px] font-bold text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded font-mono select-none">
-                      @region5.dost.gov.ph
-                    </span>
                   </div>
                 </div>
 
@@ -706,7 +704,7 @@ export function LoginPage() {
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest font-sans">Unit Designation</label>
+                  <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest font-sans">Section Designation</label>
                   <select
                     className="w-full px-3 h-9 border border-slate-250 rounded-lg text-xs font-medium text-slate-700 bg-white focus:ring-1 focus:ring-blue-600 focus:outline-none"
                     value={customRole}
@@ -720,16 +718,13 @@ export function LoginPage() {
                 </div>
 
                 <div className="space-y-1">
-                  <div className="flex justify-between">
-                    <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest font-sans">Desk Signature Password</label>
-                    <span className="text-[9px] text-slate-400">used to sign transactions</span>
-                  </div>
+                  <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest font-sans">Password</label>
                   <div className="relative">
                     <Key className="absolute left-3 top-2.5 w-4 h-4 text-slate-400" />
                     <input
                       required
                       type="password"
-                      placeholder="Enter a custom signature password..."
+                      placeholder="Enter password..."
                       className="w-full pl-9 pr-3 h-9.5 border border-slate-250 rounded-lg text-xs focus:ring-1 focus:ring-blue-600 focus:outline-none"
                       value={customPassword}
                       onChange={(e) => setCustomPassword(e.target.value)}
@@ -749,7 +744,7 @@ export function LoginPage() {
                     type="submit"
                     className="px-4 py-2 bg-[#0c4a6e] hover:bg-[#083550] text-white text-xs font-bold rounded-lg transition"
                   >
-                    Create & Sign On
+                    Create Account
                   </button>
                 </div>
               </form>
